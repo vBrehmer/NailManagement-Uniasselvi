@@ -1,0 +1,81 @@
+<div class="h-screen w-full flex overflow-hidden bg-slate-50">
+  
+    <div class="w-[70%] h-full relative hidden md:block">
+      <img src="img/registerImage.jpg" class="w-full h-full object-cover" 
+           alt="Mulher fazendo unhas em um ambiente elegante">
+      
+      <div class="absolute inset-0 bg-linear-to-t from-blue-900 via-blue-800 to-transparent opacity-60"></div>
+  
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-white text-center z-10">
+        <div class="w-24 h-24 bg-blue-600 rounded-3xl flex items-center justify-center shadow-lg shadow-blue-300 mx-auto mb-4">
+          <span class="text-white text-4xl font-bold italic">NM</span>
+        </div>
+        <h2 class="text-4xl font-bold mb-2">Nail Management</h2>
+        <p class="text-lg font-light">Sua agenda de beleza na palma da mão.</p>
+      </div>
+    </div>
+  
+    <div class="w-full md:w-[30%] h-full flex items-center justify-center p-8 bg-white relative z-20 shadow-2xl animate-fade-in">
+      <div class="w-full max-w-sm">
+        
+        <div class="mb-10 text-center md:hidden">
+          <div class="w-16 h-16 bg-blue-600 rounded-2xl flex items-center justify-center shadow-lg mx-auto mb-3">
+              <span class="text-white text-2xl font-bold italic">NM</span>
+          </div>
+          <h1 class="text-2xl font-bold text-slate-800">Nail Management</h1>
+        </div>
+  
+        <h1 class="text-3xl font-bold text-slate-800 text-center mb-8">Registre-se agora!</h1>
+  
+        <form 
+            class="flex flex-col gap-6"
+            [formGroup]="registrarForm"
+            (ngSubmit)="registrar()">
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold text-slate-700 ml-2">Usuário</label>
+            <input type="text" placeholder="usuarioExemplo" 
+                   formControlName="username"
+                   class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+          </div>
+
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold text-slate-700 ml-2">E-mail</label>
+            <input type="email" placeholder="usuarioexemplo@email.com" 
+                   formControlName="email"
+                   class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+          </div>
+          <form formGroupName="security">
+            <div class="flex flex-col gap-2">
+              <label class="font-semibold text-slate-700 ml-2">Senha</label>
+              <input type="password" placeholder="••••••••" 
+                    formControlName="senha"
+                    class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="font-semibold text-slate-700 ml-2">Confirme sua senha</label>
+              <input type="password" placeholder="••••••••" 
+                    formControlName="confirmarSenha"
+                    class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+            @if (registrarForm.get('security')?.errors?.['senhasDiferentes'] && registrarForm.get('security.confirmarSenha')?.touched) {
+              <span class="text-xs text-red-500 ml-2 font-medium">⚠️ As senhas informadas não coincidem.</span>
+            }
+          </form>
+    
+          <button type="submit" routerLink="/login"
+                  [disabled]="registrarForm.invalid"
+                  class="flex-2 bg-blue-500 disabled:bg-gray-300 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all active:scale-[0.98]">
+            Criar conta
+          </button>
+        </form>
+  
+        <div class="mt-8 pt-6 border-t border-slate-100 text-center text-sm">
+          <p class="text-slate-600">Já tem uma conta?</p>
+          <a href="/" class="text-blue-600 font-bold hover:underline cursor-pointer">Faça o login agora!</a>
+        </div>
+        
+      </div>
+    </div>
+  
+  </div>

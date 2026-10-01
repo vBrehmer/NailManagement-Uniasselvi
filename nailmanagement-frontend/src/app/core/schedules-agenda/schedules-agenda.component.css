@@ -1,0 +1,8 @@
+.main-grid {
+  display: grid;
+  gap: 24px;
+}
+
+.arrow-downward {
+  color: rgba(101, 107, 112, 0.486);
+}

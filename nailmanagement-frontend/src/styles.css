@@ -1,0 +1,36 @@
+/* You can add global styles to this file, and also import other style files */
+@import "tailwindcss";
+
+@layer base {
+  .mdc-notched-outline__notch {
+    border-right: none !important;
+  }
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+app-agenda {
+  width: 100%;
+  background-color: rgba(233, 245, 255, 0.486);
+}
+
+.fc-toolbar-chunk * {
+  margin-bottom: 3px;
+}
+
+.fc .fc-toolbar-title {
+  text-transform: capitalize;
+}
+
+span.mat-mdc-list-item-unscoped-content.mdc-list-item__primary-text {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}

@@ -1,0 +1,132 @@
+<section class="main-grid grid grid-cols-2 w-full h-full justify-center">
+  <app-calendar
+    class="shadow-2xl hover:shadow-blue-300 max-w-250 flex justify-center w-[80%] h-auto rounded-3xl"
+  />
+
+  <div class="appointments max-w-250 flex flex-col">
+    <header class="inline-flex items-center gap-2 justify-between mb-1 ml-4">
+      <h1 class="font-bold text-[25px] inline-flex items-center">
+        Agendamentos de {{ diaAgendamento.toLocaleDateString("pt-BR") }}
+        <mat-icon class="arrow-downward">arrow_downward</mat-icon>
+      </h1>
+      <div class="flex mr-4 items-center">
+        @if (diaAgendamento === hoje) {
+          <div
+            class="font-bold text-white text-[15px] p-1 mr-2 rounded-2xl bg-gray-400"
+          >
+            Today
+          </div>
+        } @else {
+          <div
+            class="font-bold text-white text-[15px] p-1 mr-2 rounded-2xl bg-gray-400 hover:bg-gray-600 cursor-pointer"
+            (click)="today()"
+          >
+            Today
+          </div>
+        }
+        <mat-icon
+          class="text-slate-300 hover:bg-blue-200 rounded-xl transition-all duration-200"
+          (click)="buscarData(-1)"
+          >chevron_left</mat-icon
+        >
+        <mat-icon
+          class="text-slate-300 hover:bg-blue-200 rounded-xl transition-all duration-200"
+          (click)="buscarData(+1)"
+          >chevron_right</mat-icon
+        >
+      </div>
+    </header>
+
+    <mat-list
+      class="appointment bg-white hover:shadow-blue-300 shadow-2xl rounded-3xl border-b-[1px solid #eee] h-fit items-start"
+    >
+      @for (evento of agenda.slice(0, 5); track evento.id; let last = $last) {
+        <mat-list-item class="">
+          <div (click)="abrirModal(evento)" class="cursor-pointer">
+            <strong class="pl-5 text-base">{{
+              evento.schedule.substring(11, 18)
+            }}</strong>
+            <span class="p-1.5">-</span>
+            <strong class="text-base">{{ evento.client_name }}</strong>
+            <span class="p-1.5">-</span>
+            <small class="text-base">{{ evento.procedure_name }}</small>
+            <span class="p-1.5">-</span>
+            <small class="text-base">{{ evento.agent_name }}</small>
+          </div>
+          <button
+            (click)="confirmarExclusao(evento)"
+            class="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200 flex justify-end"
+          >
+            <mat-icon>delete_outline</mat-icon>
+          </button>
+        </mat-list-item>
+
+        @if (agendaParaExcluir) {
+          <div
+            class="min-h-screen fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+          >
+            <div
+              class="bg-white w-full max-w-sm rounded-4xl p-8 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200"
+            >
+              <div class="flex flex-col items-center text-center gap-4">
+                <div
+                  class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center"
+                >
+                  <mat-icon style="transform: scale(1.5)"
+                    >warning_amber</mat-icon
+                  >
+                </div>
+
+                <div class="space-y-2">
+                  <h3 class="text-xl font-bold text-slate-800">
+                    Excluir Agenda?
+                  </h3>
+                  <p class="text-slate-500 text-sm leading-relaxed">
+                    Tem certeza que deseja remover
+                    <b>{{ agendaParaExcluir.schedule }}</b> de
+                    <b>{{ agendaParaExcluir.client_name }}</b
+                    >? Essa ação não poderá ser revertida.
+                  </p>
+                </div>
+
+                <div class="flex w-full gap-3 mt-2">
+                  <button
+                    (click)="agendaParaExcluir = null"
+                    class="flex-1 py-4 rounded-2xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    (click)="deletarAgenda()"
+                    class="flex-1 py-4 rounded-2xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-lg shadow-red-100 transition-all"
+                  >
+                    Excluir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (!last) {
+          <div
+            class="h-px w-full bg-linear-to-r from-transparent via-gray-500 to-transparent my-2"
+          ></div>
+        }
+      } @empty {
+        <div class="p-4 text-center text-slate-400 italic">
+          Nenhum agendamento para hoje.
+        </div>
+      }
+      <div class="justify-center flex max-h-10 pt-4">
+        <button
+          (click)="abrirModal()"
+          [disabled]="diaAgendamento.getTime() < hoje.getTime()"
+          class="add max-w-100 inline items-center rounded-3xl text-white p-2 w-[50%] h-10 cursor-pointer font-sans font-semibold bg-[#2563eb] disabled:bg-gray-500"
+        >
+          Adicionar Novo +
+        </button>
+      </div>
+    </mat-list>
+  </div>
+</section>

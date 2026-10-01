@@ -1,0 +1,8 @@
+<div class="app w-full h-full flex">
+  @if (!isLoginPage() && !isRegisterPage()) {
+    <app-sidebar></app-sidebar>
+  }
+  <main class="flex-1 h-full overflow-auto bg-slate-50">
+    <router-outlet></router-outlet>
+  </main>
+</div>

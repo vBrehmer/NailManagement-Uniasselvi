@@ -1,0 +1,37 @@
+<header class="mt-2 flex items-center gap-2 justify-start">
+  <h1 class="font-bold text-[25px]">Profissionais</h1>
+</header>
+
+<div class="bg-white shadow-2xl rounded-3xl border border-slate-200 w-fit">
+  <div class="flex flex-row items-center">
+    @for (
+      profissional of profissionais;
+      track profissional.id;
+      let last = $last
+    ) {
+      <div class="flex items-center">
+        <div
+          class="px-5 py-2 cursor-pointer hover:bg-blue-50 transition-all rounded-2xl group flex flex-col items-center"
+        >
+          <strong
+            (click)="redirect(profissional)"
+            class="text-base text-slate-700 group-hover:text-blue-600"
+          >
+            {{ profissional.name }}
+          </strong>
+          <div
+            class="h-1 w-0 group-hover:w-full bg-blue-600 transition-all rounded-full -mt-1"
+          ></div>
+        </div>
+
+        @if (!last) {
+          <div class="h-8 w-px bg-slate-200"></div>
+        }
+      </div>
+    } @empty {
+      <div class="p-4 text-center text-slate-400 italic">
+        Nenhum profissional cadastrado.
+      </div>
+    }
+  </div>
+</div>

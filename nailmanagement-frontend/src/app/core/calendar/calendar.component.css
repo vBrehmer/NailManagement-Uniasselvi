@@ -1,0 +1,184 @@
+:host ::ng-deep .fc {
+  background: white;
+  border-radius: 16px;
+  padding: 16px;
+}
+
+:host ::ng-deep .fc-theme-standard th,
+:host ::ng-deep .fc-theme-standard td {
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 1px solid rgba(32, 32, 32, 0.15);
+}
+
+:host ::ng-deep .fc-daygrid-day-frame {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: clamp(40px, 6vh, 70px);
+  position: relative;
+}
+
+:host ::ng-deep .fc-daygrid-day-top {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+:host ::ng-deep .fc-daygrid-day-number {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: transparent;
+  font-weight: 500;
+  font-size: clamp(0.8rem, 1.5vw, 1.2rem);
+  z-index: 1;
+  width: calc(clamp(40px, 6vh, 70px) - 5px);
+  height: calc(clamp(40px, 6vh, 70px) - 5px);
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  :host ::ng-deep .fc-daygrid-day-frame {
+    height: clamp(35px, 5vh, 55px);
+  }
+
+  :host ::ng-deep .fc-daygrid-day-number {
+    width: calc(clamp(35px, 5vh, 55px) - 8px);
+    height: calc(clamp(35px, 5vh, 55px) - 8px);
+    font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  }
+}
+
+:host ::ng-deep .fc-daygrid-day:hover .fc-daygrid-day-number {
+  background-color: rgba(72, 150, 240, 0.637);
+}
+
+:host ::ng-deep .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  border: 2px solid rgba(72, 150, 240, 0.637);
+}
+
+:host
+  ::ng-deep
+  .fc-daygrid-day.fc-daygrid-day-has-event
+  .fc-daygrid-day-number::after {
+  content: "";
+  width: 6px;
+  height: 6px;
+  position: absolute;
+  bottom: 8%;
+  border-radius: 50%;
+  background-color: rgba(72, 150, 240, 0.637);
+}
+
+:host ::ng-deep .fc-day-today,
+:host ::ng-deep .fc-daygrid-day.fc-day-selected,
+:host ::ng-deep .fc-daygrid-day.fc-day-active,
+:host ::ng-deep .fc-daygrid-day-frame {
+  background: transparent;
+}
+
+:host ::ng-deep .fc-day.fc-day-today {
+  background-color: transparent;
+}
+
+/* :host ::ng-deep .fc-day.fc-day-sat {
+  background-color: rgb(175, 174, 174);
+}
+
+:host ::ng-deep .fc-day.fc-day-sun {
+  background-color: rgb(175, 174, 174);
+} */
+
+:host ::ng-deep .fc-daygrid-day.selected .fc-daygrid-day-number {
+  background-color: rgba(72, 150, 240, 0.637);
+}
+
+:host ::ng-deep .fc-daygrid-day.disabled-day .fc-daygrid-day-number {
+  opacity: 0.4;
+}
+
+:host ::ng-deep .fc-daygrid-day.disabled-day {
+  pointer-events: none;
+}
+
+/* Remove a linha indesejada que atravessa o texto do label */
+.mdc-notched-outline__notch {
+  border-right: none !important;
+}
+
+/* Garante que o espaço para o texto (notch) tenha o tamanho correto */
+.mat-mdc-form-field-appearance-outline .mdc-notched-outline__notch {
+  padding-left: 4px !important;
+  padding-right: 4px !important;
+}
+
+/* Corrige a posição da label quando ela sobe */
+.mat-mdc-form-field-label-wrapper {
+  top: -1.5rem !important;
+}
+/* Container principal do calendário */
+.fc {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #e2e8f0 !important; /* Cor slate-200 */
+  background: white;
+  --fc-border-color: #f1f5f9; /* Cor das linhas internas (slate-100) */
+}
+
+/* Cabeçalho com os nomes dos dias (dom, seg...) */
+.fc-col-header-cell {
+  background-color: #f8fafc; /* slate-50 */
+  padding: 12px 0 !important;
+  color: #64748b !important; /* slate-500 */
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Estilo dos números dos dias */
+.fc-daygrid-day-number {
+  padding: 8px !important;
+  font-size: 0.875rem;
+  color: #475569 !important;
+  text-decoration: none !important;
+}
+
+/* Destaque para o dia atual (círculo azul) */
+.fc-day-today .fc-daygrid-day-number {
+  background-color: #2563eb; /* blue-600 */
+  color: white !important;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 4px;
+}
+
+:host ::ng-deep .event-dot-indicator {
+  width: 6px !important;
+  height: 6px !important;
+  background-color: #3b82f6 !important; /* Azul */
+  border-radius: 50% !important;
+  margin-top: 2px !important;
+  display: block !important;
+}
+
+:host ::ng-deep .fc-daygrid-day-top {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 4px 0 !important;
+}

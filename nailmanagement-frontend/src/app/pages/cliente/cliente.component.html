@@ -1,0 +1,325 @@
+<div class="p-4 flex flex-col gap-6 animate-fade-in">
+  <form [formGroup]="form">
+    <!-- (ngSubmit)="salvarCliente()" -->
+    <header class="flex items-center">
+      <h1 class="text-3xl font-bold text-slate-800 pr-10">Clientes</h1>
+
+      <div
+        class="flex bg-white p-1 rounded-2xl shadow-sm border border-slate-100"
+      >
+        <button
+          (click)="navegarPara('lista')"
+          [class.bg-blue-600]="abaAtual === 'lista'"
+          [class.text-white]="abaAtual === 'lista'"
+          class="px-6 py-2 rounded-xl font-medium transition-all duration-300"
+        >
+          Lista de Clientes
+        </button>
+        <button
+          (click)="navegarPara('novo')"
+          [class.bg-blue-600]="abaAtual === 'novo'"
+          [class.text-white]="abaAtual === 'novo'"
+          class="px-6 py-2 rounded-xl font-medium transition-all duration-300"
+        >
+          Novo Cliente
+        </button>
+      </div>
+    </header>
+
+    @if (abaAtual === "lista") {
+      <div
+        class="bg-white rounded-3xl shadow-2xl border border-slate-50 overflow-auto max-h-130 mt-15"
+      >
+        <mat-list class="p-0">
+          @for (cliente of clientes; track cliente.id; let last = $last) {
+            <mat-list-item
+              class="h-auto! py-4 hover:bg-slate-50 transition-colors cursor-pointer"
+            >
+              <div class="flex items-center justify-between w-full px-6 py-1">
+                <div class="flex items-center gap-4">
+                  <div
+                    class="w-12 h-12 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-lg"
+                  >
+                    {{ cliente.username.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="flex flex-col">
+                    <strong class="text-lg text-slate-800">{{
+                      cliente.username
+                    }}</strong>
+                    <span class="text-sm text-slate-500">{{
+                      cliente.email
+                    }}</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2">
+                  <button
+                    (click)="confirmarEmail(cliente)"
+                    class="p-2 text-slate-300 hover:text-green-500 hover:bg-green-50 rounded-xl transition-all duration-200"
+                  >
+                    <mat-icon>mail</mat-icon>
+                  </button>
+
+                  <button
+                    (click)="confirmarExclusao(cliente)"
+                    class="p-2 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-xl transition-all duration-200"
+                  >
+                    <mat-icon>delete_outline</mat-icon>
+                  </button>
+
+                  <button
+                    (click)="navegarPara('novo', cliente.id)"
+                    class="p-2 text-slate-300 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-all duration-200"
+                  >
+                    <mat-icon>chevron_right</mat-icon>
+                  </button>
+                </div>
+              </div>
+            </mat-list-item>
+            @if (!last) {
+              <div class="h-px bg-slate-100 mx-6"></div>
+            }
+          } @empty {
+            <div class="p-20 text-center text-slate-400 italic">
+              Nenhum cliente cadastrado.
+            </div>
+          }
+        </mat-list>
+      </div>
+
+      @if (clienteParaExcluir) {
+        <div
+          class="min-h-screen fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+        >
+          <div
+            class="bg-white w-full max-w-sm rounded-4xl p-8 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200"
+          >
+            <div class="flex flex-col items-center text-center gap-4">
+              <div
+                class="w-16 h-16 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center"
+              >
+                <mat-icon style="transform: scale(1.5)">warning_amber</mat-icon>
+              </div>
+
+              <div class="space-y-2">
+                <h3 class="text-xl font-bold text-slate-800">
+                  Excluir Cliente?
+                </h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                  Tem certeza que deseja remover
+                  <b>{{ clienteParaExcluir.username }}</b
+                  >? Essa ação não poderá ser revertida.
+                </p>
+              </div>
+
+              <div class="flex w-full gap-3 mt-2">
+                <button
+                  (click)="clienteParaExcluir = null"
+                  class="flex-1 py-4 rounded-2xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="deletarCliente()"
+                  class="flex-1 py-4 rounded-2xl font-bold text-white bg-red-500 hover:bg-red-600 shadow-lg shadow-red-100 transition-all"
+                >
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+      @if (clienteParaConfirmarEmail) {
+        <div
+          class="min-h-screen fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-100 flex items-center justify-center p-4"
+        >
+          <div
+            class="bg-white w-full max-w-sm rounded-4xl p-8 shadow-2xl border border-slate-100 animate-in fade-in zoom-in duration-200"
+          >
+            <div class="flex flex-col items-center text-center gap-4">
+              <div
+                class="w-16 h-16 bg-green-50 text-green-500 rounded-2xl flex items-center justify-center"
+              >
+                <mat-icon style="transform: scale(1.5)">check_circle</mat-icon>
+              </div>
+
+              <div class="space-y-2">
+                <h3 class="text-xl font-bold text-slate-800">
+                  Confirmação de email
+                </h3>
+                <p class="text-slate-500 text-sm leading-relaxed">
+                  Insira abaixo o código recebido:
+                  <input
+                    type="text"
+                    placeholder="123456"
+                    formControlName="numeroConfirmacaoEmail"
+                    class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </p>
+              </div>
+
+              <div class="flex w-full gap-3 mt-2">
+                <button
+                  (click)="clienteParaConfirmarEmail = null"
+                  class="flex-1 py-4 rounded-2xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="confirmacaoEmail('')"
+                  class="flex-1 py-4 rounded-2xl font-bold text-white bg-green-500 hover:bg-green-600 shadow-lg shadow-red-100 transition-all"
+                >
+                  Enviar Código
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    } @else {
+      <div
+        class="max-w-2xl mx-auto w-full bg-white p-10 rounded-3xl shadow-2xl border border-slate-50 mt-5"
+      >
+        <h2 class="text-2xl font-bold mb-8 text-slate-800">
+          {{ clienteSelecionado ? "Editar Cliente" : "Novo Cliente" }}
+        </h2>
+
+        <form class="flex flex-col gap-6">
+          <div class="flex flex-col gap-2">
+            <label class="font-semibold text-slate-700 ml-2"
+              >Nome Completo</label
+            >
+            <input
+              type="text"
+              [value]="clienteSelecionado?.username || ''"
+              placeholder="Ex: Ana Silva"
+              formControlName="username"
+              class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+            />
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="">
+              <div class="flex flex-col gap-2 -mb-5">
+                <label class="font-semibold text-slate-700 ml-2"
+                  >Nível de Acesso</label
+                >
+                <mat-form-field appearance="outline" class="nm-select-field">
+                  <mat-select formControlName="role">
+                    <mat-option value="USER">Usuário Comum</mat-option>
+                    <mat-option value="ADMIN">Administrador</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <div>
+                <strong class="text-xs text-gray-500"
+                  >* A senha padrão é "123456"</strong
+                >
+              </div>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label class="font-semibold text-slate-700 ml-2"
+                >Ultimo email enviado</label
+              >
+              <input
+                type="date"
+                disabled="true"
+                [value]="ultimoEmailEnviado || ''"
+                class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-row gap-2 justify-between">
+            <div class="flex flex-col gap-2 w-full">
+              <label class="font-semibold text-slate-700 ml-2">E-mail</label>
+              <input
+                type="email"
+                [value]="clienteSelecionado?.email || ''"
+                placeholder="ana@email.com"
+                formControlName="email"
+                class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+              />
+            </div>
+            @if (clienteSelecionado && !clienteSelecionado.email_validated) {
+              <div class="flex flex-col gap-2 h-full">
+                <button
+                  type="button"
+                  (click)="enviarCodigoConfirmacaoEmail()"
+                  class="flex p-4 mt-8 rounded-3xl font-bold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-all justify-en"
+                >
+                  <mat-icon class="flex items-center">input_circle</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+          @if (form.get("role")?.value === "ADMIN") {
+            <div
+              formGroupName="security"
+              class="flex flex-col gap-6 mt-2 p-1 border-t border-slate-100 pt-6 animate-fade-in"
+            >
+              <div class="flex items-center gap-2 mb-2">
+                <div class="w-1 h-6 bg-blue-600 rounded-full"></div>
+                <h3 class="font-bold text-slate-800">Segurança da Conta</h3>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex flex-col gap-2">
+                  <label class="font-semibold text-slate-700 ml-2"
+                    >Nova Senha</label
+                  >
+                  <input
+                    type="password"
+                    formControlName="novaSenha"
+                    placeholder="••••••••"
+                    class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+                <div class="flex flex-col gap-2">
+                  <label class="font-semibold text-slate-700 ml-2"
+                    >Confirmação</label
+                  >
+                  <input
+                    type="password"
+                    formControlName="confirmarSenha"
+                    placeholder="••••••••"
+                    class="w-full p-4 bg-slate-50 border-none rounded-2xl focus:ring-2 focus:ring-blue-500 outline-none transition-all"
+                  />
+                </div>
+              </div>
+
+              @if (
+                form.get("security")?.errors?.["senhasDiferentes"] &&
+                form.get("security.confirmarSenha")?.touched
+              ) {
+                <span class="text-xs text-red-500 ml-2 font-medium"
+                  >⚠️ As senhas informadas não coincidem.</span
+                >
+              }
+            </div>
+          }
+
+          <div class="flex gap-4 mt-4">
+            <button
+              type="button"
+              (click)="navegarPara('lista')"
+              class="flex-1 bg-slate-100 text-slate-600 py-4 rounded-2xl font-bold hover:bg-slate-200 transition-all"
+            >
+              Cancelar
+            </button>
+            <button
+              type="submit"
+              class="flex-2 bg-blue-500 disabled:bg-gray-300 text-white py-4 rounded-2xl font-bold text-lg hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all active:scale-[0.98]"
+              (click)="salvarCliente()"
+              [disabled]="form.invalid"
+            >
+              {{ clienteSelecionado ? "Atualizar Dados" : "Salvar Cliente" }}
+            </button>
+          </div>
+        </form>
+      </div>
+    }
+  </form>
+</div>

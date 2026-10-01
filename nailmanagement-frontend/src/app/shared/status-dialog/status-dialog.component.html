@@ -1,0 +1,6 @@
+<div class="dialog-content" style="text-align:center; padding: 20px; align-items: center; justify-content: center; display: inline-flex;">
+    <mat-spinner *ngIf="data.status === 'loading'" diameter="25" style="padding-right: 20px;"></mat-spinner>
+    <mat-icon *ngIf="data.status === 'success'" style="padding-right: 5px;">check_circle_outline</mat-icon>
+    <mat-icon *ngIf="data.status === 'error'" style="padding-right: 5px;">highlight_off</mat-icon>
+    <strong>Enviando...</strong>
+</div>

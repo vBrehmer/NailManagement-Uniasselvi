@@ -1,0 +1,126 @@
+<ng-content>
+  <mat-card>
+    <form [formGroup]="cadastroForm">
+      <mat-card-content>
+        <div class="grid-container">
+          <mat-form-field appearance="outline" class="full-width service-data">
+            <mat-label>Data</mat-label>
+            <input
+              matInput
+              [matDatepicker]="picker"
+              formControlName="data"
+              readonly="true"
+              placeholder="dd/mm/yyyy"
+            />
+            <mat-datepicker-toggle
+              [disabled]="data.data != null"
+              matSuffix
+              [for]="picker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="cadastroForm.get('data')?.errors?.['required']">
+              Data do serviço é obrigatória
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width mb-2">
+            <mat-label>Horário</mat-label>
+            <input matInput type="time" formControlName="hora" />
+            <mat-error *ngIf="cadastroForm.get('hora')?.errors?.['required']">
+              Horário do serviço é obrigatório
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width mb-2">
+            <mat-label>Cliente</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="clienteCtrl"
+              [matAutocomplete]="autoCliente"
+            />
+            <mat-autocomplete
+              #autoCliente="matAutocomplete"
+              [displayWith]="displayCliente"
+              (optionSelected)="clienteSelecionado($event)"
+            >
+              @for (cliente of clientesFiltrados$ | async; track cliente.id) {
+                <mat-option [value]="cliente">
+                  {{ cliente.username }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+            <mat-error *ngIf="cadastroForm.get('cliente')?.errors"
+              >Cliente é obrigatório</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width mb-2">
+            <mat-label>Serviço</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="servicoCtrl"
+              [matAutocomplete]="autoServico"
+            />
+            <mat-autocomplete
+              #autoServico="matAutocomplete"
+              [displayWith]="displayServico"
+              (optionSelected)="servicoSelecionado($event)"
+            >
+              @for (servico of servicoFiltrados$ | async; track servico.id) {
+                <mat-option [value]="servico">
+                  {{ servico.name }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+            <mat-error *ngIf="cadastroForm.get('servico')?.errors"
+              >Serviço é obrigatório</mat-error
+            >
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Profissional</mat-label>
+            <input
+              type="text"
+              matInput
+              [formControl]="agenteCtrl"
+              [matAutocomplete]="autoAgente"
+            />
+            <mat-autocomplete
+              #autoAgente="matAutocomplete"
+              [displayWith]="displayAgentes"
+              (optionSelected)="agenteSelecionado($event)"
+            >
+              @for (agente of agentesFiltrados$ | async; track agente.id) {
+                <mat-option [value]="agente">
+                  {{ agente.name }}
+                </mat-option>
+              }
+            </mat-autocomplete>
+            <mat-error *ngIf="cadastroForm.get('profissional')?.errors"
+              >Profissional é obrigatório</mat-error
+            >
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+
+      <mat-card-actions class="full-width action-buttons justify-between">
+        <button
+          mat-raised-button
+          type="button"
+          (click)="closeModal()"
+          class="text-white! bg-gray-500! cancelar-button"
+        >
+          CANCELAR
+        </button>
+        <button
+          mat-raised-button
+          type="button"
+          (click)="registerSchedule()"
+          class="register-button text-white! bg-blue-600! cadastrar-button cursor-auto disabled:bg-gray-400!"
+        >
+          CADASTRAR
+        </button>
+      </mat-card-actions>
+    </form>
+  </mat-card>
+</ng-content>
