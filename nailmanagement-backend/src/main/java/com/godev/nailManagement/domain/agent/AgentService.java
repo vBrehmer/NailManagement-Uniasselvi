@@ -2,7 +2,9 @@ package com.godev.nailManagement.domain.agent;
 
 import com.godev.nailManagement.common.dtos.AgentRequest;
 import com.godev.nailManagement.common.dtos.AgentResponse;
+import com.godev.nailManagement.common.dtos.ProcedureResponse;
 import com.godev.nailManagement.common.exceptions.AgentNotFoundException;
+import com.godev.nailManagement.domain.procedure.Procedure;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.UUID;
 @Service
 public class AgentService {
 
-    private final AgentRepository agentRepository;
+    private AgentRepository agentRepository;
 
     public AgentService(AgentRepository agentRepository) {
         this.agentRepository = agentRepository;

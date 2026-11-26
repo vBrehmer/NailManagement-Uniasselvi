@@ -4,6 +4,8 @@ import com.godev.nailManagement.common.dtos.ClientRequest;
 import com.godev.nailManagement.common.dtos.ClientResponse;
 import com.godev.nailManagement.common.dtos.PasswordRequest;
 import com.godev.nailManagement.common.exceptions.ClientNotFoundException;
+import com.godev.nailManagement.domain.authapiintegration.AuthApiIntegrationService;
+import com.godev.nailManagement.domain.client.listener.ClientRegisteredEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,15 +20,18 @@ public class ClientService {
     private final ClientRepository clientRepository;
     private final PasswordEncoder passwordEncoder;
     private final ApplicationEventPublisher applicationEventPublisher;
+    private final AuthApiIntegrationService authApiIntegrationService;
 
     public ClientService(
             ClientRepository clientRepository,
             PasswordEncoder passwordEncoder,
-            ApplicationEventPublisher applicationEventPublisher
+            ApplicationEventPublisher applicationEventPublisher,
+            AuthApiIntegrationService authApiIntegrationService
     ) {
         this.clientRepository = clientRepository;
         this.passwordEncoder = passwordEncoder;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.authApiIntegrationService = authApiIntegrationService;
     }
 
     /*
@@ -70,6 +75,11 @@ public class ClientService {
             client.setEmail(request.email());
             client.setRole(request.role());
 
+            if (!request.email().equals(client.getEmail())) {
+                applicationEventPublisher.publishEvent(
+                        new ClientRegisteredEvent(client.getUsername(), client.getEmail())
+                );
+            }
             return toResponse(clientRepository.save(client));
         } else {
             throw new IllegalArgumentException("Wrong password!");
@@ -89,6 +99,9 @@ public class ClientService {
         }
         if (request.email() != null && !request.email().equals(client.getEmail())) {
             client.setEmail(request.email());
+            applicationEventPublisher.publishEvent(
+                    new ClientRegisteredEvent(client.getUsername(), client.getEmail())
+            );
         }
         if (request.role() != null) {
             client.setRole(request.role());
@@ -116,6 +129,31 @@ public class ClientService {
 
     /*
         NailManagement CRUD above;
+     */
+
+    /*
+        \start
+        Auxiliar methods to help front-end;
+     */
+
+    public boolean isEmailValidated(UUID id) {
+        Client c = clientRepository.findById(id).orElseThrow(() -> new ClientNotFoundException("Client not found!"));
+        return c.isEmail_validated();
+    }
+
+    public List<ClientResponse> findAllValidatedEmails() {
+        List<Client> client = clientRepository.findAll().stream().filter(Client::isEmail_validated).toList();
+        return client.stream().map(this::toResponse).toList();
+    }
+
+    public List<ClientResponse> findAllNotValidatedEmails() {
+        List<Client> client = clientRepository.findAll().stream().filter(u -> !u.isEmail_validated()).toList();
+        return client.stream().map(this::toResponse).toList();
+    }
+
+    /*
+        \end
+        Auxiliar methods to help front-end;
      */
 
     // Internal method for converting into response record;

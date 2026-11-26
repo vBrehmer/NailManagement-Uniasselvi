@@ -20,7 +20,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "uuid set default gen_random_uuid()")
+    @Column(columnDefinition = "uuid default gen_random_uuid()")
     private UUID id;
 
     @Column(nullable = false, unique = true)
@@ -32,7 +32,7 @@ public class Client {
     @Column(nullable = false)
     private String email;
 
-    @Column(nullable = false, columnDefinition = "boolean set default false")
+    @Column(nullable = false, columnDefinition = "boolean default false")
     private boolean email_validated;
 
     @Column(columnDefinition = "timestamptz")

@@ -15,7 +15,7 @@ public class Agent {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    @Column(columnDefinition = "uuid set default gen_random_uuid()")
+    @Column(columnDefinition = "uuid default gen_random_uuid()")
     private UUID id;
 
     @Column(unique = true)
